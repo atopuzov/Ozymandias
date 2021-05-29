@@ -851,16 +851,16 @@ void image_draw_letter(font_t font, int letter_id, int x, int y, color_t color) 
         return;
     }
     if (font == FONT_NORMAL_SHADED) {
-        if (img->draw.is_fully_compressed) {
-            draw_compressed(img, data, x + 1, y + 1, img->height);
+        if (img->is_fully_compressed()) {
+            draw_compressed(img, data, x + 1, y + 1, img->get_height());
         } else
             draw_uncompressed(img, data, x + 1, y + 1, 0, DRAW_TYPE_NONE);
     }
-    if (img->draw.is_fully_compressed) {
+    if (img->is_fully_compressed()) {
         if (color)
-            draw_compressed_set(img, data, x, y, img->height, color);
+            draw_compressed_set(img, data, x, y, img->get_height(), color);
         else
-            draw_compressed(img, data, x, y, img->height);
+            draw_compressed(img, data, x, y, img->get_height());
     } else
         draw_uncompressed(img, data, x, y, color, color ? DRAW_TYPE_SET : DRAW_TYPE_NONE);
 }

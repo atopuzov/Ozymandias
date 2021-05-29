@@ -458,7 +458,10 @@ static void draw_regular_building(int type, int image_id, int x, int y, int grid
         if (GAME_ENV == ENGINE_ENV_C3) {
             image_draw_isometric_footprint(image_id, x, y, COLOR_MASK_GREEN);
             const image *img = image_get(image_id + 1);
-            image_draw(image_id + 1, x + img->get_sprite_offset_x() - 32, y + img->get_sprite_offset_y() - 64, COLOR_MASK_GREEN);
+            image_draw(image_id + 1, x + img->get_sprite_offset_x() - 32, y + img->get_sprite_offset_y() - 64,
+                       COLOR_MASK_GREEN);
+        }
+        else if (GAME_ENV == ENGINE_ENV_PHARAOH)
             draw_building(image_id, x, y);
     } else if (type == BUILDING_HOUSE_VACANT_LOT)
         draw_building(image_id_from_group(GROUP_BUILDING_HOUSE_VACANT_LOT), x, y);
