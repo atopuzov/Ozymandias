@@ -2,8 +2,13 @@
 #define CORE_IMAGE_H
 
 #include "core/encoding.h"
+#include "core/buffer.h"
 #include "core/image_group.h"
 #include "graphics/color.h"
+
+#include <vector>
+#include <string>
+#include <algorithm>
 
 #define IMAGE_FONT_MULTIBYTE_OFFSET 10000
 #define IMAGE_FONT_MULTIBYTE_TRAD_CHINESE_MAX_CHARS 2188
@@ -24,51 +29,40 @@ enum {
 /**
  * Image metadata
  */
-typedef struct {
-    int width;
-    int height;
-    int num_animation_sprites;
-    int sprite_offset_x;
-    int sprite_offset_y;
-    int animation_can_reverse;
-    int animation_speed_id;
-    int offset_mirror;
-    struct {
-        int type;
-        int is_fully_compressed;
-        int is_external;
-        int has_compressed_part;
-        char bitmap_name[200];
-        int bmp_index;
-        color_t *data;
-        int offset;
-        int data_length;
-        int uncompressed_length;
-    } draw;
-} image;
-
-class imagepak {
-    bool initialized;
-    const char *name;
-    int entries_num;
-    int groups_num;
-    uint32_t header_data[10];
-    uint16_t *group_image_ids;
-    image *images;
-    color_t *data;
-
-    bool check_initialized();
-
+class image {
 public:
-    int id_shift_overall = 0;
+    int width = 0;
+    int height = 0;
+    int num_animation_sprites = 0;
+    int sprite_offset_x = 0;
+    int sprite_offset_y = 0;
+    int animation_can_reverse = 0;
+    int animation_speed_id = 0;
+    int offset_mirror = 0;
 
-    imagepak();
+    struct {
+        int type = 0;
+        int is_fully_compressed = 0;
+        int is_external = 0;
+        int has_compressed_part = 0;
+        std::string bitmap_name;
+        int bmp_index = 0;
+        std::vector<color_t> data;
+        int offset = 0;
+        int data_length = 0;
+        int uncompressed_length = 0;
+        size_t size = 0;
+    } draw;
 
-    int load_555(const char *filename_555, const char *filename_sgx, int shift = 0);
+    image() = default;
+    ~image() = default;
 
-    int get_entry_count();
-    int get_id(int group);
-    const image *get_image(int id, bool relative = false);
+    void set_data(color_t *image_data, size_t size);
+    const color_t *get_data() const;
+
+    const char *get_name() const;
+    void set_name(const char *filename);
+    void set_name(const char *filename, size_t size);
 };
 
 extern int terrain_ph_offset;
@@ -78,6 +72,10 @@ int image_load_fonts(encoding_type encoding);
 int image_load_enemy(int enemy_id);
 
 int image_id_from_group(int collectiion, int group);
+
+color_t to_32_bit(uint16_t c);
+int convert_uncompressed(buffer *buf, int amount, color_t *dst);
+int convert_compressed(buffer *buf, int amount, color_t *dst);
 
 const image *image_get(int id, int mode = 0);
 const image *image_letter(int letter_id);

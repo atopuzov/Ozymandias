@@ -250,6 +250,7 @@ set(CORE_FILES
     ${PROJECT_SOURCE_DIR}/src/core/time.cpp
     ${PROJECT_SOURCE_DIR}/src/core/zip.cpp
     ${PROJECT_SOURCE_DIR}/src/core/game_environment.cpp
+        ${PROJECT_SOURCE_DIR}/src/core/image_collection.cpp
 )
 
 set(BUILDING_FILES
